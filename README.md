@@ -2,7 +2,7 @@
 
 Metodología
 
-Paso 1: Selección de países y año de estudio
+Selección de países y año de estudio
 
 Elegir países que tengan datos completos para el año más reciente disponible.
 
