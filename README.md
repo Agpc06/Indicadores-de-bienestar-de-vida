@@ -1,5 +1,12 @@
 # Indicadores-de-bienestar-de-vida
 
+Metodología
+
+Paso 1: Selección de países y año de estudio
+
+Elegir países que tengan datos completos para el año más reciente disponible.
+
+Incluir una mezcla de países de diferentes regiones y niveles de ingresos para tener variedad en los datos.
 
 Objetivo General
 
@@ -7,8 +14,8 @@ Analizar la correlación entre diferentes indicadores sociales, económicos y de
 
 Objetivos Específicos
 
-Identificar un conjunto de indicadores internacionales comparables que representen dimensiones clave del desarrollo (salud, educación, infraestructura, ingresos).
+Identificar qué indicador tiene la correlación más alta con la esperanza de vida.
 
-Comparar la correlación del PIB frente a otros indicadores (como tasa de alfabetización femenina o acceso a internet) para determinar cuál predice mejor el bienestar.
+Comparar el coeficiente de correlación del PIB con el de los otros indicadores.
 
-Identificar los indicadores con la correlación más fuerte, para concluir cuáles son los verdaderos motores de la calidad de vida.
+Preguntarse: ¿el PIB es realmente el mejor predictor? ¿Hay algún indicador social o de infraestructura que lo supere?
