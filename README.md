@@ -1,21 +1,14 @@
-# Indicadores-de-bienestar-de-vida
+# Análisis sobre la Relación entre el PIB y los Índices de Natalidad y Mortalidad
 
-Metodología
+# # Objetivo General
 
-Selección de países y año de estudio
+Analizar la relación estadística entre el Producto Interno Bruto y las variables de natalidad y mortalidad, con el fin de determinar cómo el desarrollo económico influye en el comportamiento demográfico de las naciones en las últimas décadas.
 
-Elegir países que tengan datos completos para el año más reciente disponible.
+# # Objetivos especificos 
 
-Incluir una mezcla de países de diferentes regiones y niveles de ingresos para tener variedad en los datos.
-
-Objetivo General
-
-Analizar la correlación entre diferentes indicadores sociales, económicos y de infraestructura con el nivel de bienestar social de los países, con el fin de determinar qué factores explican de manera más significativa la calidad de vida más allá del PIB.
-
-Objetivos Específicos
-
-Identificar qué indicador tiene la correlación más alta con la esperanza de vida.
-
-Comparar el coeficiente de correlación del PIB con el de los otros indicadores.
-
-Preguntarse: ¿el PIB es realmente el mejor predictor? ¿Hay algún indicador social o de infraestructura que lo supere?
+- Comparar si el impacto del PIB en la natalidad es igual de fuerte en América Latina que en Europa
+- Medir qué tan grande es la diferencia en las muertes entre los países de ingresos altos y bajos
+- Descubrir que países que se han vuelto más ricos han logrado bajar sus tasas de mortalidad y natalidad con el tiempo.
+- Comparar qué regiones del mundo han logrado bajar más rápido sus muertes en la última década gracias a su crecimiento económico.
+- Comparar dos países que tengan casi el mismo PIB pero diferentes niveles de natalidad
+- Comparar el país con el PIB más alto del mundo frente al de menor PIB y ver su si son totalmente opuestos
