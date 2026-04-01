@@ -30,7 +30,6 @@ def rescatar_nulos(df_nuevo, table_name, engine):
     try:
         #Subir el DataFrame a una tabla temporal en Supabase
         temp_table_name = f"temp_{table_name}"
-        print(f"Subiendo {len(df_nuevo)} filas a la tabla temporal {temp_table_name}...")
         df_nuevo.to_sql(temp_table_name, engine, if_exists='replace', index=False)
 
         #Definir la consulta SQL de actualización 
@@ -47,21 +46,10 @@ def rescatar_nulos(df_nuevo, table_name, engine):
         #Ejecutar transacción
         with engine.begin() as connection:
             result = connection.execute(query)
-            print(f"Se han rescatado {result.rowcount} valores que eran nulos.")
 
         #Borrar la tabla temporal
         with engine.begin() as connection:
             connection.execute(text(f"DROP TABLE {temp_table_name};"))
-            print("Tabla temporal eliminada.")
 
     except Exception as e:
         print(f"Error durante el proceso: {e}")
-
-
-if __name__ == "__main__":
-    # Solo para pruebas rápidas locales
-    try:
-        with engine.connect() as conn:
-            print("Conexión exitosa a Supabase.")
-    except Exception as e:
-        print(f"Error de conexión: {e}")
