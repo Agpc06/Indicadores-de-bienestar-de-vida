@@ -1,13 +1,18 @@
-# Análisis sobre la Relación entre el PIB y los Índices de Natalidad y Mortalidad
+# Análisis del Impacto Urbano en la Calidad de Vida y la Sostenibilidad Ambiental de Latinoamérica
+
+Según CEPAL (Comisión Económica para América Latina y el Caribe), Latinoamérica representa aproximadamente el 8% de la población mundial. Esta región mantiene retos sociales altos y bajos que condicionan su desarrollo.
+
+Utilizando la base de datos de los Indicadores del Desarrollo Mundial del Banco Mundial, es posible clasificar la información en secciones económicas, demográficas, medioambientales, de salud y gubernamentales.
+
+Sin embargo, para determinar el verdadero desarrollo de una nación, no basta con mirar su economía. Los indicadores demográficos, de salud y medioambientales son una parte esencial para ver el progreso de una región. Por lo tanto, es fundamental transformar los datos globales en conocimiento público. Este estudio se propone analizar esos indicadores para ofrecer una visión clara de los retos que enfrenta Latinoamérica.
 
 # # Objetivo General
 
-Analizar la relación estadística entre el Producto Interno Bruto y las variables de natalidad y mortalidad, con el fin de determinar cómo el desarrollo económico influye en el comportamiento demográfico de las naciones en las últimas décadas.
+Analizar el crecimiento del desarrollo urbano sobre la calidad de vida (Salud)  y la sostenibilidad ambiental de Latinoamérica.
 
 # # Objetivos especificos 
 
-- Comparar si el impacto del PIB en la natalidad es igual de fuerte en América Latina que en Europa
-- Medir qué tan grande es la diferencia en las muertes entre los países de ingresos altos y bajos
-- Comparar qué regiones del mundo han logrado bajar más rápido sus muertes en la última década gracias a su crecimiento económico.
-- Comparar dos países que tengan casi el mismo PIB pero diferentes niveles de natalidad
-- Comparar el país con el PIB más alto del mundo frente al de menor PIB y ver su si son totalmente opuestos
+1. Determinar la correlación entre el crecimiento poblacional y la variación de la superficie forestal en los países de la región
+2. Analizar la relación entre la esperanza de vida al nacer y las emisiones de CO2
+3. Establecer la asociación entre la tasa de mortalidad infantil y la esperanza de vida
+4. Comparar mediante pruebas de independencia (Chi-cuadrado) la incidencia de la mortalidad infantil según el tipo de área (urbana o rural)
