@@ -1,4 +1,6 @@
-sqlalchemy
+supabase
 pandas
 python-dotenv
 psycopg2-binary
+time
+pathlib
