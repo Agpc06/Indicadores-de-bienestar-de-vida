@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 from pathlib import Path
 import time
-
+import pandas as pd
+import streamlit as st
 
 #Cargar variables de entorno desde el archivo .env
 BASE_DIR = Path(__file__).resolve().parent.parent 
@@ -53,3 +54,25 @@ def rescatar_nulos(df_nuevo, chunksize=1000):
         time.sleep(2)
     print(f"Se han actualizado {actualizados} registros.")
 
+
+def ejecutar_query(): 
+    """
+    Envia un Query SQL en formato TEXT a Supabase, Supabase lo transforma y ejecuta el query, devuelve el resultado en formato JSON,
+    Pandas transforma este formato a un dataframe y muestra el resultado
+    """
+    try:
+        # Llamamos a una función creada en Supabase y le pasamos el texto
+        response = supabase.rpc('ejecutar_sql_crudo', {'query': query_input}).execute()
+        
+        datos_json = response.data
+        
+        if datos_json:
+            # Convertimos el dicccionario (json) en un dataframe
+            df_resultados = pd.DataFrame(datos_json)
+            st.success(f"Consulta ejecutada con éxito. Filas devueltas: {len(df_resultados)}")
+            st.dataframe(df_resultados, use_container_width=True)
+        else:
+            st.warning("La consulta se ejecutó, pero no devolvió ningún resultado")
+            
+    except Exception as e:
+        st.error(f"Error en la consulta:\n{e}")
