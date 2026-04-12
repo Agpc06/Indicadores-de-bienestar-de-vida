@@ -55,7 +55,7 @@ def rescatar_nulos(df_nuevo, chunksize=1000):
     print(f"Se han actualizado {actualizados} registros.")
 
 
-def ejecutar_query(): 
+def ejecutar_query(query_input): 
     """
     Envia un Query SQL en formato TEXT a Supabase, Supabase lo transforma y ejecuta el query, devuelve el resultado en formato JSON,
     Pandas transforma este formato a un dataframe y muestra el resultado
@@ -76,3 +76,39 @@ def ejecutar_query():
             
     except Exception as e:
         st.error(f"Error en la consulta:\n{e}")
+
+def obtener_datos(tabla):
+    """
+    Función para obtener datos de una tabla específica en Supabase y devolverlos 
+    como un DataFrame de Pandas.
+    """
+    try:
+        if tabla in ['country', 'indicators', 'series']:
+            response = supabase.schema('public').table(tabla).select('*').execute()
+            if response.data:
+                df = pd.DataFrame(response.data)
+                # Renombramos columnas según la tabla para mayor claridad
+                if tabla == 'country':
+                    df.columns = ['Codigo Pais', 'Nombre', 'Nombre largo', 'Moneda', 'Nivel de Ingreso']
+                elif tabla == 'indicators':
+                    df.columns = ['Codigo Pais', 'Codigo Indicador', 'Año', 'Valor']
+                elif tabla == 'series':
+                    df.columns = ['Codigo Indicador', 'Nombre del Indicador', 'Tema', 'Definición', 'Unidad de Medida']
+                return df
+            else:
+                return pd.DataFrame()
+        elif tabla == 'total':
+            response = supabase.schema('public').table('investigación_denormalizada').select('*').execute()
+            if response.data:
+                df = pd.DataFrame(response.data)
+                df.columns = ['Codigo Pais', 'Nombre Pais', 'Nivel de Ingreso', 'Codigo Indicador', 'Nombre Indicador', 'Año', 'Valor'] 
+                return df
+            else:
+                return pd.DataFrame()
+        else:
+            print('Por favor solicitar una tabla válida')
+
+    except Exception as e:
+        print(f"Error al obtener datos de la tabla {tabla}: {e}")
+        return pd.DataFrame()
+    
