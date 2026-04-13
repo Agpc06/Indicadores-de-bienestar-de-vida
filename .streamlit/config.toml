@@ -1,0 +1,10 @@
+# .streamlit/config.toml 
+
+[theme]
+primaryColor="#ffc107"
+backgroundColor="#0f1a3a"
+secondaryBackgroundColor="#2d3958"
+textColor="#f0f2f6"
+
+# Fuente Times New Roman (Serif)
+font="serif"
