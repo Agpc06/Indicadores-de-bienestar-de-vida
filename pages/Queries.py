@@ -21,6 +21,123 @@ query_seleccionado = st.selectbox(
             "Query 5: Países con Crecimiento Compuesto Sostenido y Ranking Global"
         ]
     )
+if query_seleccionado == "Query 1: Países con Desempeño Sostenido por Encima del Promedio Regional": 
+    st.subheader("**Países con Desempeño Sostenido por Encima del Promedio Regional**")
+
+    with st.expander("**Ver Pregunta**"):
+        st.text("""
+        Identifica todos los países que, durante los últimos 10 años con datos disponibles, hayan
+        mantenido consistentemente su valor por encima del promedio de su región para un mismo
+        indicador de desarrollo económico. Solo considera países que pertenezcan al grupo de
+        ingresos medios o altos, y muestra el nombre del país, su región, el nombre del indicador,
+        el promedio regional y el promedio del país en ese período. Ordena los resultados por la
+        diferencia entre ambos promedios de forma descendente.
+""")
+    with st.expander("**Ver Query**"):
+        query_real = "SELECT * FROM query_1" 
+        # query_1 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
+        query = """
+WITH VentanaTiempo AS (
+    -- Obtiene el año más reciente disponible
+    SELECT MAX(year) AS año_maximo
+    FROM original.indicators
+),
+DatosFiltrados AS (
+    -- Selecciona datos directamente de indicators y une con country 
+    SELECT
+        c.short_name,
+        i.country_code,
+        c.region,
+        s.indicator_name,
+        i.indicator_code,
+        i.Year,
+        i.value
+    FROM original.indicators i
+    JOIN original.country c ON i.country_code = c.country_code
+    JOIN original.series s ON i.indicator_code = s.indicator_code
+    CROSS JOIN VentanaTiempo vt
+    WHERE
+        i.year >= vt.año_maximo - 9 AND i.year <= vt.año_maximo
+        AND c.income_group IN ('High income', 'Upper middle income')
+        AND c.region IS NOT NULL
+        AND s.topic IN ('Financial Sector', 'Economic Policy & Debt')
+        AND i.value IS NOT NULL
+),
+PromedioRegionAnual AS (
+    -- Calcular el promedio de la región por año e indicador
+    SELECT
+        region,
+        indicator_code,
+        year,
+        AVG(Value) AS valor_promedio_region
+    FROM DatosFiltrados
+    GROUP BY region, indicator_code, year
+),
+ComparacionAnual AS (
+    -- Compara país vs región año a año
+    SELECT
+        df.country_code,
+        df.short_name,
+        df.region,
+        df.indicator_code,
+        df.indicator_name,
+        df.year,
+        df.value AS valor_pais,
+        pra.valor_promedio_region,
+        CASE WHEN df.Value > pra.valor_promedio_region THEN 1 ELSE 0 END AS supera_promedio
+    FROM DatosFiltrados df
+    JOIN PromedioRegionAnual pra
+        ON df.region = pra.region
+        AND df.indicator_code = pra.indicator_code
+        AND df.year = pra.year
+),
+PaisesConsistentes AS (
+    -- Filtra países que superaron el promedio en TODOS los años del periodo
+    SELECT
+        country_code,
+        indicator_code
+    FROM ComparacionAnual
+    GROUP BY country_code, indicator_code
+    HAVING SUM(supera_promedio) = COUNT(*)
+),
+PromediosTotales AS (
+    -- Calcula los promedios del periodo 
+    SELECT
+        ca.short_name,
+        ca.region,
+        ca.indicator_name,
+        AVG(ca.valor_pais) AS promedio_pais,
+        AVG(ca.valor_promedio_region) AS promedio_region
+    FROM ComparacionAnual ca
+    JOIN PaisesConsistentes pc
+        ON ca.country_code = pc.country_code
+        AND ca.indicator_code = pc.indicator_code
+    GROUP BY ca.short_name, ca.region, ca.indicator_name
+)
+-- Resultado final 
+SELECT
+    short_name AS nombre_pais,
+    region AS region,
+    indicator_name AS nombre_indicador,
+    ROUND(promedio_region::numeric, 2) AS "Promedio Regional (10 años)",
+    ROUND(promedio_pais::numeric, 2) AS "Promedio País (10 años)",
+    ROUND((promedio_pais - promedio_region)::numeric, 2) AS Diferencia
+FROM PromediosTotales
+ORDER BY Diferencia DESC;  
+        """  
+
+        st.code(query, language ="sql")
+
+        if st.button("Ejecutar Query"):
+            with st.spinner("Ejecutando consulta a Supabase..."):
+                try:
+                    df = ejecutar_query(query_real)
+                    if not df.empty:
+                        st.success(f"Consulta ejecutada exitosamente.")
+                    else: 
+                        st.warning("No se encontraron datos")
+                except Exception as e:
+                    st.error(f"Error al ejecutar consulta: {str(e)}")
 
 if query_seleccionado == "Query 2: Ranking de Indicadores con Mayor Brecha entre Grupos de Ingreso": 
     st.subheader("**Ranking de Indicadores con Mayor Brecha entre Grupos de Ingreso**")
@@ -38,7 +155,7 @@ if query_seleccionado == "Query 2: Ranking de Indicadores con Mayor Brecha entre
         query_real = "SELECT * FROM query_2" 
         # query_2 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
         query = """
-WITH PaisesObjetivos AS (
+    WITH PaisesObjetivos AS (
     -- Seleccionamos solo paises de ingreso alto y bajo
     SELECT country_code, income_group
     FROM original.country
@@ -120,7 +237,7 @@ SELECT
     pct_gap AS "Brecha Porcentual (%)"
 FROM Ranking
 WHERE rank = 1
-ORDER BY pct_gap DESC     
+ORDER BY pct_gap DESC 
         """  
 
         st.code(query, language ="sql")
