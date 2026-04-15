@@ -69,13 +69,13 @@ def ejecutar_query(query_input):
         if datos_json:
             # Convertimos el dicccionario (json) en un dataframe
             df_resultados = pd.DataFrame(datos_json)
-            st.success(f"Consulta ejecutada con éxito. Filas devueltas: {len(df_resultados)}")
             st.dataframe(df_resultados, use_container_width=True)
         else:
             st.warning("La consulta se ejecutó, pero no devolvió ningún resultado")
             
     except Exception as e:
         st.error(f"Error en la consulta:\n{e}")
+    return df_resultados
 
 def obtener_datos(tabla):
     """
