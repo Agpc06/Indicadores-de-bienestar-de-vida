@@ -17,5 +17,4 @@ Analizar el crecimiento del desarrollo urbano sobre la calidad de vida (Salud)  
 2. Determinar la correlación entre el crecimiento poblacional y la variación de la superficie forestal en los países de la región.
    
 3. Analizar la relación entre la esperanza de vida al nacer y las emisiones de CO2.
-   
-4. Analizar que tipo de relación existe entre la mortalidad infantil y el tipo de área urbana (urbana ó rural).
+
