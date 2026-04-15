@@ -46,12 +46,12 @@ Este apartado detalla el camino técnico seguido para procesar los datos del Wor
 
 ## Planteamiento de las hipótesis 📌
   ### Planteamiento 1: Superficie forestal y Crecimiento Poblacional.
-  •	Hipótesis nula: No existe una correlación significativa entre el crecimiento poblacional y la disminución de la superficie forestal latinoamericana.
-  •	Hipótesis alterna: Existe una correlación negativa significativa entre el crecimiento poblacional y el porcentaje de superficie forestal latinoamericana.
+- Hipótesis nula: No existe una correlación significativa entre el crecimiento poblacional y la disminución de la superficie forestal latinoamericana.
+- Hipótesis alterna: Existe una correlación negativa significativa entre el crecimiento poblacional y el porcentaje de superficie forestal latinoamericana.
 
   ### Planteamiento 2: Emisiones de CO2 y la Esperanza de Vida al nacer.
-  •	Hipótesis nula: El nivel de emisiones de CO2 no tiene ningún efecto predictivo sobre la esperanza de vida de Latinoamérica.
-  •	Hipótesis alterna: El incremento en las emisiones de CO2 afecta significativamente la esperanza de vida al nacer en Latinoamérica.
+- Hipótesis nula: El nivel de emisiones de CO2 no tiene ningún efecto predictivo sobre la esperanza de vida de Latinoamérica.
+- Hipótesis alterna: El incremento en las emisiones de CO2 afecta significativamente la esperanza de vida al nacer en Latinoamérica.
 
   ## Nivel de medición de las variables 🔍
    Para justificar la aplicación de los métodos estadísticos paramétricos adecuados, se debe aclarar que todas las variables seleccionadas (Emisiones de dioxido de carbono, Esperanza de Vida al nacer, Superficie Forestal, Crecimiento Poblacional) poseen un nivel de medición de razón, es decir, son continuas.
