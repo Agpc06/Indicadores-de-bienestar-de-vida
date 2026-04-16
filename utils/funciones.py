@@ -110,4 +110,16 @@ def obtener_datos(tabla):
     except Exception as e:
         print(f"Error al obtener datos de la tabla {tabla}: {e}")
         return pd.DataFrame()
-    
+
+def obtener_datos_directo(tabla):
+    try:
+        res = supabase.table('investigación_denormalizada').select('*').execute()
+        if res.data:
+            df = pd.DataFrame(res.data)
+            # Normalizamos las columnas para evitar errores en los nombres
+            df.columns = ['Codigo Pais', 'Nombre Pais', 'Nivel de Ingreso', 'Codigo Indicador', 'Nombre Indicador', 'Año', 'Valor']
+            return df
+        return pd.DataFrame()
+    except Exception as e:
+        st.error(f"Error al conectar con Supabase: {e}")
+        return pd.DataFrame()
