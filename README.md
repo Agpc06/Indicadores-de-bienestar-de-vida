@@ -65,10 +65,53 @@ Se utilizaron distintas herramientas para el manejo y análisis de datos
 
 •⁠  ⁠Streamlit: Creación de una interfaz web interactiva para la exploración rápida de datos.
 
-- Python: limpieza y procesamiento de datos.
+•⁠  Python: limpieza y procesamiento de datos.
 
-# Dashboard de Power Bi
-En esta parte de la investigación observamos los datos mediante un dashboard interactivo diseñado para el análisis de los objetivos del proyecto
+### Estructura del Repositorio 📁
+Nos ayudará a entender cada carpeta del repositorio de este proyecto
 
-### Link
-**📊[Dashboard Interactivo](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
+```text
+Indicadores-de-bienestar-de-vida/
+├── .streamlit/
+│   └── config.toml                # Configuración de la app de Streamlit
+│
+├── inputs/                        # Scripts para obtención y procesamiento de datos
+│   ├── interpolación.py           # Métodos de interpolación de datos
+│   ├── owid_co2.py                # Datos de CO2 (Our World in Data)
+│   ├── owid_enrolment.py          # Datos de educación
+│   └── wbgapi.py                  # Conexión a API del Banco Mundial
+│
+├── pages/                         # Páginas de la aplicación
+│   ├── 01_Introducción.py         # Introducción del proyecto
+│   ├── 02_Objetivos.py            # Objetivos
+│   ├── 03_Planteamiento_Del_Problema.py  # Problema de investigación
+│   ├── 05_Manejo_De_Datos.py      # Procesamiento de datos
+│   ├── 06_Evolución_Histórica.py  # Análisis temporal
+│   ├── 07_Impacto_Poblacional.py  # Impacto en la población
+│   └── Queries.py                 # Consultas SQL
+│
+├── utils/                         # Funciones auxiliares (helpers)
+│
+├── app.py                         # Aplicación principal de Streamlit
+├── requirements.txt               # Dependencias del proyecto
+├── README.md                      # Documentación
+├── .gitignore                     # Archivos ignorados por Git
+├── evaluacion_sql_indicadores.docx # Documento de evaluación
+```
+# Colaboradores del proyecto 🫂
+
+Este proyecto fue desarrollado por los siguientes colaboradores:
+
+- Vicente Díaz
+- Laurys Alvarez
+- Angel Pastrano
+- Angel Reina
+
+# Dashboards Interactivos 📈
+En esta parte de la investigación observamos los datos mediante dashboards interactivos diseñado en Streamlit y Power BI para el análisis de los objetivos del proyecto
+
+### Links
+**📊[Dashboard Interactivo - Power BI](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
+
+**📊[Dashboard Interactivo - Streamlit]
+
