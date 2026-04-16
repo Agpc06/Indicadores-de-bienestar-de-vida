@@ -65,9 +65,10 @@ Se utilizaron distintas herramientas para el manejo y análisis de datos
 
 •⁠  ⁠Streamlit: Creación de una interfaz web interactiva para la exploración rápida de datos.
 
-- Python: limpieza y procesamiento de datos.
+•⁠  Python: limpieza y procesamiento de datos.
 
-### Estructura del Repositorio
+### Estructura del Repositorio 📁
+Nos ayudará a entender cada carpeta del repositorio de este proyecto
 
 ```text
 Indicadores-de-bienestar-de-vida/
@@ -97,8 +98,20 @@ Indicadores-de-bienestar-de-vida/
 ├── .gitignore                     # Archivos ignorados por Git
 ├── evaluacion_sql_indicadores.docx # Documento de evaluación
 ```
-# Dashboard de Power Bi
-En esta parte de la investigación observamos los datos mediante un dashboard interactivo diseñado para el análisis de los objetivos del proyecto
+# Colaboradores del proyecto 🫂
 
-### Link
-**📊[Dashboard Interactivo](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
+Este proyecto fue desarrollado por los siguientes colaboradores:
+
+- Vicente Díaz
+- Laurys Alvarez
+- Angel Pastrano
+- Angel Reina
+
+# Dashboards Interactivos 📈
+En esta parte de la investigación observamos los datos mediante dashboards interactivos diseñado en Streamlit y Power BI para el análisis de los objetivos del proyecto
+
+### Links
+**📊[Dashboard Interactivo - Power BI](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
+
+**📊[Dashboard Interactivo - Streamlit]
+
