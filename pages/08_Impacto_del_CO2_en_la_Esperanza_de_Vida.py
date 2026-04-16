@@ -1,22 +1,17 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from utils.funciones import supabase
-from utils.funciones import obtener_datos_directo
-
-st.header('🌍Impacto de las emisiones de CO2 sobre la Esperanza de Vida al Nacer')
-#st.write()
-
-#st.subheader()
+from utils.funciones import supabase, obtener_datos_directo
 
 df_impacto = obtener_datos_directo('total')
 
 if not df_impacto.empty:
+
     ind_co2 = "CO2 emissions (metric tons per capita)"
     ind_vida = "Life expectancy at birth, total (years)"
 
+    # Filtrado
     df_filtrado_obj = df_impacto[df_impacto['Nombre Indicador'].isin([ind_co2, ind_vida])]
-
     df_pivot = df_filtrado_obj.pivot_table(
         index=['Nombre Pais', 'Año'],
         columns='Nombre Indicador',
@@ -24,16 +19,15 @@ if not df_impacto.empty:
     ).dropna().reset_index()
 
     if not df_pivot.empty:
-        # Filtro de país
+        # Filtros en Sidebar
         st.sidebar.header("Filtros")
         paises_en_pivot = sorted(df_pivot["Nombre Pais"].unique())
-        paises_sel_grafico = st.sidebar.multiselect(
-            "Seleccionar países para el análisis:",
+        paises_sel_grafico = st.sidebar.selectbox(
+            "Seleccionar los países deseados para realizar el análisis:",
             options=paises_en_pivot,
             default=paises_en_pivot
         )
 
-        # Filtro de año
         anios_en_pivot = sorted(df_pivot["Año"].unique())
         rango_anios_grafico = st.sidebar.slider(
             "Rango de Años:",
@@ -42,25 +36,70 @@ if not df_impacto.empty:
             value=(int(min(anios_en_pivot)), int(max(anios_en_pivot)))
         )
 
-        # Aplicamos los filtros
-        df_filtrado_final=df_pivot[
+
+        df_filtrado_final = df_pivot[
             (df_pivot["Nombre Pais"].isin(paises_sel_grafico)) &
             (df_pivot["Año"].between(rango_anios_grafico[0], rango_anios_grafico[1]))
-        ]
+            ]
 
-        if not df_filtrado_final.empty:
-            fig_obj = px.scatter(
-                df_filtrado_final,
-                x=ind_co2,
-                y=ind_vida,
-                color="Nombre Pais",
-                trendline="ols",
-                hover_name="Año",
+        # Cálculo del Promedio Regional
+        df_promedio_regional = df_pivot.groupby('Año').mean(numeric_only=True).reset_index()
+
+
+        st.markdown("---")
+        st.header('🌍 Impacto de las Emisiones de CO2 sobre la Esperanza de Vida al Nacer')
+
+        col_graf1, col_graf2 = st.columns(2)
+
+        with col_graf1:
+            st.subheader("Tendencias Históricas")
+            st.write("*Promedio Regional: CO2 vs Esperanza de Vida*")
+
+            fig_lineas = px.line(
+                df_promedio_regional,
+                x='Año',
+                y=[ind_co2, ind_vida],
+                markers=True,
                 template="plotly_dark",
-                labels={ind_co2:"Emisiones de CO2 (ton. per cápita)", ind_vida:"Esperanza de Vida (años)"}
+                color_discrete_map={ind_co2: "#FF073A", ind_vida: "#FFFFFF"}
             )
 
-        st.plotly_chart(fig_obj, use_container_width=True)
+            fig_lineas.update_layout(
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                yaxis_title="Valores Promedio"
+            )
+            st.plotly_chart(fig_lineas, use_container_width=True)
 
+        with col_graf2:
+            st.subheader("Relación de Impacto")
+            st.write(f"*Dispersión Regional ({rango_anios_grafico[0]}-{rango_anios_grafico[1]})*")
+
+            if not df_filtrado_final.empty:
+                fig_scatter = px.scatter(
+                    df_filtrado_final,
+                    x=ind_co2,
+                    y=ind_vida,
+                    color="Año",
+                    trendline="ols",
+                    template="plotly_dark",
+                    color_continuous_scale="Viridis",
+                    labels={ind_co2: "CO2", ind_vida: "Vida (Años)"}
+                )
+                st.plotly_chart(fig_scatter, use_container_width=True)
+            else:
+                st.warning("No hay datos para los filtros seleccionados.")
+
+        # Conclusión
+        st.markdown(f"""
+        <div style="background-color: #1e293b; padding: 20px; border-radius: 10px; border-left: 5px solid #3b82f6; margin-top: 20px;">
+            <h4 style="color: #3b82f6; margin-top:0;">Resumen del Análisis Regional:</h4>
+            <ul style="color: white;">
+                <li><b>Tendencia de Emisiones:</b> El promedio regional de CO2 ha variado en un {((df_promedio_regional[ind_co2].iloc[-1] / df_promedio_regional[ind_co2].iloc[0]) - 1) * 100:.1f}% desde el inicio del registro.</li>
+                <li><b>Correlación:</b> Se observa que el aumento de CO2 no detiene el avance de la esperanza de vida, pero introduce riesgos ambientales a largo plazo.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
     else:
-        st.warning("No hay suficientes datos cruzados para visualizar la relación.")
+        st.warning("No hay suficientes datos cruzados para mostrar la correlación.")
+else:
+    st.error("No se detectaron las columnas necesarias en el CSV o la base de datos.")
