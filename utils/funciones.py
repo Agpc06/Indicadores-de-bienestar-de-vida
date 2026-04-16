@@ -101,7 +101,6 @@ def obtener_datos(tabla):
             response = supabase.schema('public').table('investigación_denormalizada').select('*').execute()
             if response.data:
                 df = pd.DataFrame(response.data)
-                df.columns = ['Codigo Pais', 'Nombre Pais', 'Nivel de Ingreso', 'Codigo Indicador', 'Nombre Indicador', 'Año', 'Valor'] 
                 return df
             else:
                 return pd.DataFrame()
