@@ -38,7 +38,7 @@ df_final = pd.merge(df_forest, df_rural, on=['country_name', 'year'], how='inner
 
 # Filtro en la sidebar
 lista_paises = ['Promedio Regional'] + sorted(df_final['country_name'].unique())
-pais_sel = st.sidebar.selectbox("Seleccionar País (Objetivo 2):", lista_paises)
+pais_sel = st.sidebar.selectbox("Seleccionar País:", lista_paises)
 
 if pais_sel == 'Promedio Regional':
     data_plot = df_final.groupby('year').mean(numeric_only=True).reset_index()
