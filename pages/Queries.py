@@ -268,56 +268,56 @@ if query_seleccionado == "Query 3: Evolución Interanual y Detección de Regresi
         query_real = "SELECT * FROM query_3" 
         # query_3 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
         query = """
-    WITH ConfiguracionTiempo AS (
-    -- Obtiene el año más reciente de mediciones
-    SELECT MAX(year) AS año_maximo
-    FROM original.indicators
-),
-IndicadoresConNotasRecientes AS ( 
-    -- Filtramos por año > 2010
-    SELECT DISTINCT
-        f.indicator_code,
-        MAX(f.year) AS año_nota_mas_reciente
-    FROM original.footnotes f
-    WHERE f.year > 2010
-    GROUP BY f.indicator_code
-),
-IndicadoresConNotaPais AS (
-    -- Contamos países con notas 
+    WITH DatosFiltrados AS (
     SELECT
-        f.indicator_code,
-        COUNT(DISTINCT f.country_code) AS cantidad_paises_con_notas
-    FROM original.footnotes f
-    GROUP BY f.indicator_code
-),
-IndicadoresSinDatosRecientes AS (
-    -- Indicadores que SÍ tienen datos en los últimos 5 años
-    SELECT DISTINCT
-        i.indicator_code
+        c.short_name AS country_name,  
+        s.indicator_name,             
+        i.country_code,
+        i.indicator_code,
+        i.year,                        
+        i.value                         
     FROM original.indicators i
-    CROSS JOIN ConfiguracionTiempo ct
-    WHERE 
-        i.value IS NOT NULL
-        AND i.year >= (ct.año_maximo - 4)
+    JOIN original.country c ON i.country_code = c.country_code
+    JOIN original.series s ON i.indicator_code = s.indicator_code
+    WHERE
+        c.region = 'Latin America & Caribbean'
+        AND s.topic IN ('Health', 'Education')
+        AND i.year BETWEEN 2000 AND 2020
+        AND i.value IS NOT NULL
+        AND i.value <> 0
+),
+EvolucionAnual AS (
+    SELECT
+        country_name,
+        indicator_name,
+        year,
+        value AS valor_actual,
+        LAG(value) OVER (PARTITION BY country_code, indicator_code ORDER BY year) AS valor_anterior
+    FROM DatosFiltrados
+),
+RegresionesDetectadas AS (
+    SELECT
+        country_name,
+        indicator_name,
+        year AS año_caida,
+        valor_anterior,
+        valor_actual,
+        ((valor_actual - valor_anterior) / valor_anterior) * 100 AS variacion_porcentual
+    FROM EvolucionAnual
+    WHERE
+        valor_anterior IS NOT NULL
+        AND ((valor_actual - valor_anterior) / valor_anterior) * 100 < -20
 )
--- Resultado Final
+-- Resultado final 
 SELECT
-    s.indicator_code AS codigo_indicador,
-    s.indicator_name AS nombre_completo,
-    s.topic AS tema,
-    inr.año_nota_mas_reciente,
-    icp.cantidad_paises_con_notas
-FROM original.series s
-JOIN IndicadoresConNotasRecientes inr
-    ON s.indicator_code = inr.indicator_code
-JOIN IndicadoresConNotaPais icp
-    ON s.indicator_code = icp.indicator_code
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM IndicadoresSinDatosRecientes isdr
-    WHERE isdr.indicator_code = s.indicator_code
-)
-ORDER BY inr.año_nota_mas_reciente DESC;
+    country_name AS nombre_pais,
+    indicator_name AS nombre_indicador,
+    año_caida,
+    valor_anterior,
+    valor_actual,
+    ROUND(variacion_porcentual::numeric, 2) AS variacion_porcentual
+FROM RegresionesDetectadas
+ORDER BY variacion_porcentual ASC, nombre_pais ASC, año_caida ASC;
         """  
 
         st.code(query, language ="sql")
