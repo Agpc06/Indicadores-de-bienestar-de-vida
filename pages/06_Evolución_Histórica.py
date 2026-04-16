@@ -17,7 +17,8 @@ st.markdown('Este objetivo se centra en trazar una línea temporal comparativa e
 st.markdown('---')
 # Extraemos datos de Supabase
 tabla = 'total'
-df = obtener_datos(tabla) 
+with st.spinner('Obteniendo datos de Supabase...'):
+    df = obtener_datos(tabla) 
 
 esperanza = "Life expectancy at birth, total (years)"  
 mortalidad = "Mortality rate, infant (per 1,000 live births)" 
