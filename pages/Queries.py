@@ -253,86 +253,6 @@ ORDER BY pct_gap DESC
                 except Exception as e:
                     st.error(f"Error al ejecutar consulta: {str(e)}")
 
-if query_seleccionado == "Query 3: Evolución Interanual y Detección de Regresiones Significativas": 
-    st.subheader("**Evolución Interanual y Detección de Regresiones Significativas**")
- 
-    with st.expander("**Ver Pregunta**"):
-        st.text("""
-        Para los países de América Latina y el Caribe, detecta aquellos que hayan experimentado
-        al menos una caída interanual superior al 20% en algún indicador de salud o educación
-        entre el año 2000 y el 2020. Por cada caso detectado, muestra el nombre del país, el
-        indicador, el año en que se produjo la caída, el valor anterior, el valor posterior y el
-        porcentaje de variación. Excluye los casos donde alguno de los dos valores sea nulo o cero.
-""")
-    with st.expander("**Ver Query**"):
-        query_real = "SELECT * FROM query_3" 
-        # query_3 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
-        query = """
-    WITH DatosFiltrados AS (
-    SELECT
-        c.short_name AS country_name,  
-        s.indicator_name,             
-        i.country_code,
-        i.indicator_code,
-        i.year,                        
-        i.value                         
-    FROM original.indicators i
-    JOIN original.country c ON i.country_code = c.country_code
-    JOIN original.series s ON i.indicator_code = s.indicator_code
-    WHERE
-        c.region = 'Latin America & Caribbean'
-        AND s.topic IN ('Health', 'Education')
-        AND i.year BETWEEN 2000 AND 2020
-        AND i.value IS NOT NULL
-        AND i.value <> 0
-),
-EvolucionAnual AS (
-    SELECT
-        country_name,
-        indicator_name,
-        year,
-        value AS valor_actual,
-        LAG(value) OVER (PARTITION BY country_code, indicator_code ORDER BY year) AS valor_anterior
-    FROM DatosFiltrados
-),
-RegresionesDetectadas AS (
-    SELECT
-        country_name,
-        indicator_name,
-        year AS año_caida,
-        valor_anterior,
-        valor_actual,
-        ((valor_actual - valor_anterior) / valor_anterior) * 100 AS variacion_porcentual
-    FROM EvolucionAnual
-    WHERE
-        valor_anterior IS NOT NULL
-        AND ((valor_actual - valor_anterior) / valor_anterior) * 100 < -20
-)
--- Resultado final 
-SELECT
-    country_name AS nombre_pais,
-    indicator_name AS nombre_indicador,
-    año_caida,
-    valor_anterior,
-    valor_actual,
-    ROUND(variacion_porcentual::numeric, 2) AS variacion_porcentual
-FROM RegresionesDetectadas
-ORDER BY variacion_porcentual ASC, nombre_pais ASC, año_caida ASC;
-        """  
-
-        st.code(query, language ="sql")
-
-        if st.button("Ejecutar Query"):
-            with st.spinner("Ejecutando consulta a Supabase..."):
-                try:
-                    df = ejecutar_query(query_real)
-                    if not df.empty:
-                        st.success(f"Consulta ejecutada exitosamente.")
-                    else: 
-                        st.warning("No se encontraron datos")
-                except Exception as e:
-                    st.error(f"Error al ejecutar consulta: {str(e)}")
-  
 if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Datos Recientes": 
     st.subheader("**Indicadores Huérfanos con Notas pero sin Datos Recientes**")
 
@@ -400,6 +320,81 @@ WHERE NOT EXISTS (
     WHERE isdr.indicator_code = s.indicator_code
 )
 ORDER BY inr.año_nota_mas_reciente DESC;
+        """  
+
+        st.code(query, language ="sql")
+
+        if st.button("Ejecutar Query"):
+            with st.spinner("Ejecutando consulta a Supabase..."):
+                try:
+                    df = ejecutar_query(query_real)
+                    if not df.empty:
+                        st.success(f"Consulta ejecutada exitosamente.")
+                    else: 
+                        st.warning("No se encontraron datos")
+                except Exception as e:
+                    st.error(f"Error al ejecutar consulta: {str(e)}")
+
+if query_seleccionado == "Query 5: Países con Crecimiento Compuesto Sostenido y Ranking Global": 
+    st.subheader("**Países con Crecimiento Compuesto Sostenido y Ranking Global**")
+ 
+    with st.expander("**Ver Pregunta**"):
+        st.text("""
+        Calcula la tasa de crecimiento anual compuesto (CAGR) de un indicador de ingreso
+        nacional para todos los países que tengan datos tanto en el año 2000 como en el 2020.
+        Luego, asigna a cada país un ranking global y un ranking dentro de su grupo de ingresos
+        según esa tasa de crecimiento. Muestra únicamente los 5 países con mayor CAGR de
+        cada grupo de ingresos, incluyendo el nombre del país, su grupo de ingresos, la región,
+        el CAGR calculado, el ranking global y el ranking por grupo. El CAGR se define como:
+        ((valor_final / valor_inicial) ^ (1/n) - 1) * 100, donde n = número de años.
+""")
+    with st.expander("**Ver Query**"):
+        query_real = "SELECT * FROM query_5" 
+        # query_5 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
+        query = """
+    WITH DatosUnidos AS (
+    SELECT 
+        i.country_code,
+        c.income_group,
+        c.region, 
+        i.year,
+        i.value::FLOAT AS Value
+    FROM original.indicators i
+    JOIN original.country c ON i.country_code = c.country_code
+    WHERE i.indicator_code = 'NY.GNP.PCAP.CD' 
+      AND i.year IN (2000, 2020)
+),
+DatosFiltrados AS (
+    SELECT 
+        country_code,
+        income_group,
+        region,
+        MAX(CASE WHEN "year" = 2000 THEN value END) AS Valor_2000,
+        MAX(CASE WHEN "year" = 2020 THEN value END) AS Valor_2020
+    FROM DatosUnidos
+    GROUP BY country_code, income_group, region
+    HAVING MAX(CASE WHEN "year" = 2000 THEN Value END) > 0 
+       AND MAX(CASE WHEN "year" = 2020 THEN Value END) > 0
+),
+CalculoCAGR AS (
+    SELECT 
+        country_code,
+        income_group,
+        region,
+        (( (Valor_2020 / Valor_2000) ^ (1.0/20.0) ) - 1) * 100 AS CAGR
+    FROM DatosFiltrados
+),
+Rankings AS (
+    SELECT *,
+        RANK() OVER (ORDER BY CAGR DESC) AS Ranking_Global,
+        RANK() OVER (PARTITION BY "income_group" ORDER BY CAGR DESC) AS Ranking_Por_Grupo
+    FROM CalculoCAGR
+)
+SELECT *
+FROM Rankings
+WHERE Ranking_Por_Grupo <= 5
+AND Income_Group IS NOT NULL 
+ORDER BY "income_group", Ranking_Por_Grupo;
         """  
 
         st.code(query, language ="sql")

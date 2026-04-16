@@ -66,3 +66,9 @@ Se utilizaron distintas herramientas para el manejo y análisis de datos
 •⁠  ⁠Streamlit: Creación de una interfaz web interactiva para la exploración rápida de datos.
 
 - Python: limpieza y procesamiento de datos.
+
+# Dashboard de Power Bi
+En esta parte de la investigación observamos los datos mediante un dashboard interactivo diseñado para el análisis de los objetivos del proyecto
+
+### Link
+**📊[Dashboard Interactivo](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
