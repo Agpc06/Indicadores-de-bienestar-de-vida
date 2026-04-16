@@ -100,7 +100,8 @@ if not df_impacto.empty:
         <div style="background-color: #1e293b; padding: 20px; border-radius: 10px; border-left: 5px solid #3b82f6; margin-top: 20px;">
             <h4 style="color: #3b82f6; margin-top:0;">Conclusión:</h4>
             <ul style="color: white;">
-                <li><b>Tendencia de Emisiones:</b> El promedio regional de CO2 ha variado en un {((df_promedio_regional[ind_co2].iloc[-1] / df_promedio_regional[ind_co2].iloc[0]) - 1) * 100:.1f}% desde el inicio del registro.</li>
+                <li><b>*Esperanza de vida*:</b> Presenta un crecimiento sostenido y estable, reflejando mejoras en sistemas de salud y calidad de vida regional.</li>
+                <li><b>*Emisiones de CO2*:</b> Aunque muestran una tendencia al alza, presentan mayor volatilidad, vinculada directamente a los ciclos de industrialización y cambios en las matrices energéticas de los países latinos.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
