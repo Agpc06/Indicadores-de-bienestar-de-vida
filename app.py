@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-st.title('📊 Análisis del Impacto Urbano en la Calidad de Vida y la Sostenibilidad Ambiental de Latinoamérica')
+st.title('📊 Análisis del Impacto Urbano en la Esperanza de Vida y la Sostenibilidad Ambiental de Latinoamérica')
 st.markdown('---')
 
 st.subheader('Datos')
