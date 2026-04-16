@@ -253,7 +253,92 @@ ORDER BY pct_gap DESC
                 except Exception as e:
                     st.error(f"Error al ejecutar consulta: {str(e)}")
 
-if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Datos Recientes": 
+if query_seleccionado == "Query 3: Evolución Interanual y Detección de Regresiones Significativas"":
+    st.subheader("**Evolución Interanual y Detección de Regresiones Significativas"**")
+
+    with
+    datosfiltrados as (
+                              select
+                              c.short_name as country_name,
+                              s.indicator_name,
+                              i.country_code,
+                              i.indicator_code,
+                              i.year,
+                              i.value
+                              from
+                              original.indicators i
+                              join original.country c on i.country_code = c.country_code
+                              join original.series s on i.indicator_code = s.indicator_code
+                              where
+                              c.region = 'Latin America & Caribbean'::text
+                              and (
+                              s.topic ~~ * '%Health%'::text
+                              or s.topic ~~ * '%Education%'::text
+                      )
+                      and i.year >= 2000
+                      and i.year <= 2020
+                      and i.value is not null
+                      and i.value <> 0:
+        :
+        numeric
+    ),
+    evolucionanual as (
+        select
+        datosfiltrados.country_name,
+        datosfiltrados.indicator_name,
+        datosfiltrados.year,
+        datosfiltrados.value as valor_actual,
+        lag(datosfiltrados.value)
+    over(
+        partition
+    by
+    datosfiltrados.country_code,
+    datosfiltrados.indicator_code
+    order
+    by
+    datosfiltrados.year
+    ) as valor_anterior
+    from
+    datosfiltrados
+    ),
+    regresionesdetectadas as (
+                                 select
+                                 evolucionanual.country_name,
+                                 evolucionanual.indicator_name,
+                                 evolucionanual.year as anio_caida,
+                                 evolucionanual.valor_anterior,
+                                 evolucionanual.valor_actual,
+                                 (
+                                 evolucionanual.valor_actual - evolucionanual.valor_anterior
+                             ) / evolucionanual.valor_anterior * 100::numeric as variacion_porcentual
+    from
+    evolucionanual
+        where
+
+    evolucionanual.valor_anterior is not null
+    and (
+            (
+                    evolucionanual.valor_actual - evolucionanual.valor_anterior
+            ) / evolucionanual.valor_anterior * 100::numeric
+    ) < '-20'::integer::numeric
+    )
+    select
+    country_name as nombre_pais,
+    indicator_name as nombre_indicador,
+    anio_caida,
+    valor_anterior,
+    valor_actual,
+    round(variacion_porcentual, 2) as variacion_porcentual
+    from
+    regresionesdetectadas
+        order
+
+    by \
+        (round(variacion_porcentual, 2)), \
+        country_name, \
+        anio_caida;
+
+if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Datos Recientes":
     st.subheader("**Indicadores Huérfanos con Notas pero sin Datos Recientes**")
 
     with st.expander("**Ver Pregunta**"):
