@@ -253,7 +253,86 @@ ORDER BY pct_gap DESC
                 except Exception as e:
                     st.error(f"Error al ejecutar consulta: {str(e)}")
 
+if query_seleccionado == "Query 3: Evolución Interanual y Detección de Regresiones Significativas": 
+    st.subheader("**Evolución Interanual y Detección de Regresiones Significativas**")
+ 
+    with st.expander("**Ver Pregunta**"):
+        st.text("""
+        Para los países de América Latina y el Caribe, detecta aquellos que hayan experimentado
+        al menos una caída interanual superior al 20% en algún indicador de salud o educación
+        entre el año 2000 y el 2020. Por cada caso detectado, muestra el nombre del país, el
+        indicador, el año en que se produjo la caída, el valor anterior, el valor posterior y el
+        porcentaje de variación. Excluye los casos donde alguno de los dos valores sea nulo o cero.
+""")
+    with st.expander("**Ver Query**"):
+        query_real = "SELECT * FROM query_3" 
+        # query_3 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
+        query = """
+    WITH ConfiguracionTiempo AS (
+    -- Obtiene el año más reciente de mediciones
+    SELECT MAX(year) AS año_maximo
+    FROM original.indicators
+),
+IndicadoresConNotasRecientes AS ( 
+    -- Filtramos por año > 2010
+    SELECT DISTINCT
+        f.indicator_code,
+        MAX(f.year) AS año_nota_mas_reciente
+    FROM original.footnotes f
+    WHERE f.year > 2010
+    GROUP BY f.indicator_code
+),
+IndicadoresConNotaPais AS (
+    -- Contamos países con notas 
+    SELECT
+        f.indicator_code,
+        COUNT(DISTINCT f.country_code) AS cantidad_paises_con_notas
+    FROM original.footnotes f
+    GROUP BY f.indicator_code
+),
+IndicadoresSinDatosRecientes AS (
+    -- Indicadores que SÍ tienen datos en los últimos 5 años
+    SELECT DISTINCT
+        i.indicator_code
+    FROM original.indicators i
+    CROSS JOIN ConfiguracionTiempo ct
+    WHERE 
+        i.value IS NOT NULL
+        AND i.year >= (ct.año_maximo - 4)
+)
+-- Resultado Final
+SELECT
+    s.indicator_code AS codigo_indicador,
+    s.indicator_name AS nombre_completo,
+    s.topic AS tema,
+    inr.año_nota_mas_reciente,
+    icp.cantidad_paises_con_notas
+FROM original.series s
+JOIN IndicadoresConNotasRecientes inr
+    ON s.indicator_code = inr.indicator_code
+JOIN IndicadoresConNotaPais icp
+    ON s.indicator_code = icp.indicator_code
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM IndicadoresSinDatosRecientes isdr
+    WHERE isdr.indicator_code = s.indicator_code
+)
+ORDER BY inr.año_nota_mas_reciente DESC;
+        """  
 
+        st.code(query, language ="sql")
+
+        if st.button("Ejecutar Query"):
+            with st.spinner("Ejecutando consulta a Supabase..."):
+                try:
+                    df = ejecutar_query(query_real)
+                    if not df.empty:
+                        st.success(f"Consulta ejecutada exitosamente.")
+                    else: 
+                        st.warning("No se encontraron datos")
+                except Exception as e:
+                    st.error(f"Error al ejecutar consulta: {str(e)}")
+  
 if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Datos Recientes": 
     st.subheader("**Indicadores Huérfanos con Notas pero sin Datos Recientes**")
 
