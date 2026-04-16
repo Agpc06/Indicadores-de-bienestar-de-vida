@@ -6,7 +6,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title('📊 Análisis del Impacto Urbano en la Calidad de Vida y la Sostenibilidad Ambiental de Latinoamérica')
+st.title('📊 Análisis del Impacto Urbano en la Esperanza de Vida y la Sostenibilidad Ambiental de Latinoamérica')
 st.markdown('---')
 
 st.markdown('En las últimas décadas, la humanidad ha comprendido que el verdadero éxito de una nación no se mide solo por su riqueza material, sino por su capacidad para ofrecer una vida digna y saludable a sus ciudadanos sin comprometer los recursos naturales del futuro. Ahora, el desarrollo es un equilibrio entre economía, sociedad y medio ambiente.')
