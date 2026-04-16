@@ -1,5 +1,9 @@
-import streamlit as st 
-from utils.funciones import obtener_datos, supabase 
+import streamlit as st
+import pandas as pd
+import pltoly.express as px
+import os
+from utils.funciones import obtener_datos, supabase
+from analysis.estadistica import calcular_correlacion
 
 # Configurar la página
 st.set_page_config(
