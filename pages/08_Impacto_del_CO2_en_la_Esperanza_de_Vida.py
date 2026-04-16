@@ -20,12 +20,17 @@ if not df_impacto.empty:
 
     if not df_pivot.empty:
         # Filtros en Sidebar
+        # --- 2. CONFIGURACIÓN DE FILTROS EN SIDEBAR ---
         st.sidebar.header("Filtros")
+
+        # Creamos la lista de opciones: "Promedio Regional" + los países individuales
         paises_en_pivot = sorted(df_pivot["Nombre Pais"].unique())
-        paises_sel_grafico = st.sidebar.selectbox(
-            "Seleccionar los países deseados para realizar el análisis:",
-            options=paises_en_pivot,
-            default=paises_en_pivot
+        opciones_filtro = ["Promedio Regional"] + paises_en_pivot
+
+        seleccion = st.sidebar.selectbox(
+            "Seleccionar ámbito del análisis:",
+            options=opciones_filtro,
+            index=0  # Por defecto "Promedio Regional"
         )
 
         anios_en_pivot = sorted(df_pivot["Año"].unique())
@@ -36,25 +41,27 @@ if not df_impacto.empty:
             value=(int(min(anios_en_pivot)), int(max(anios_en_pivot)))
         )
 
+        # --- 3. LÓGICA DE FILTRADO DINÁMICO ---
+        if seleccion == "Promedio Regional":
+            # Si elige promedio, usamos el DataFrame agrupado que creamos antes
+            df_filtrado_final = df_pivot.groupby('Año').mean(numeric_only=True).reset_index()
+            df_filtrado_final["Nombre Pais"] = "Promedio Regional"  # Etiqueta para el color
+        else:
+            # Si elige un país, filtramos normalmente
+            df_filtrado_final = df_pivot[
+                (df_pivot["Nombre Pais"] == seleccion) &
+                (df_pivot["Año"].between(rango_anios_grafico[0], rango_anios_grafico[1]))
+                ]
 
-        df_filtrado_final = df_pivot[
-            (df_pivot["Nombre Pais"].isin(paises_sel_grafico)) &
-            (df_pivot["Año"].between(rango_anios_grafico[0], rango_anios_grafico[1]))
-            ]
-
-        # Cálculo del Promedio Regional
-        df_promedio_regional = df_pivot.groupby('Año').mean(numeric_only=True).reset_index()
-
-
-        st.markdown("---")
-        st.header('🌍 Impacto de las Emisiones de CO2 sobre la Esperanza de Vida al Nacer')
-
+        # --- 4. RENDERIZADO DE GRÁFICOS (Misma estructura de columnas) ---
         col_graf1, col_graf2 = st.columns(2)
 
         with col_graf1:
             st.subheader("Tendencias Históricas")
-            st.write("*Promedio Regional: CO2 vs Esperanza de Vida*")
+            st.write("*Evolución Temporal: CO2 vs Esperanza de Vida*")
 
+            # Este gráfico siempre muestra el promedio para dar contexto regional
+            df_promedio_regional = df_pivot.groupby('Año').mean(numeric_only=True).reset_index()
             fig_lineas = px.line(
                 df_promedio_regional,
                 x='Año',
@@ -63,23 +70,22 @@ if not df_impacto.empty:
                 template="plotly_dark",
                 color_discrete_map={ind_co2: "#FF073A", ind_vida: "#FFFFFF"}
             )
-
             fig_lineas.update_layout(
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                yaxis_title="Valores Promedio"
+                yaxis_title="Valores"
             )
             st.plotly_chart(fig_lineas, use_container_width=True)
 
         with col_graf2:
             st.subheader("Relación de Impacto")
-            st.write(f"*Dispersión Regional ({rango_anios_grafico[0]}-{rango_anios_grafico[1]})*")
+            st.write(f"*Análisis de {seleccion}*")
 
             if not df_filtrado_final.empty:
                 fig_scatter = px.scatter(
                     df_filtrado_final,
                     x=ind_co2,
                     y=ind_vida,
-                    color="Año",
+                    color="Nombre Pais" if seleccion == "Promedio Regional" else "Año",
                     trendline="ols",
                     template="plotly_dark",
                     color_continuous_scale="Viridis",
@@ -92,10 +98,9 @@ if not df_impacto.empty:
         # Conclusión
         st.markdown(f"""
         <div style="background-color: #1e293b; padding: 20px; border-radius: 10px; border-left: 5px solid #3b82f6; margin-top: 20px;">
-            <h4 style="color: #3b82f6; margin-top:0;">Resumen del Análisis Regional:</h4>
+            <h4 style="color: #3b82f6; margin-top:0;">Conclusión:</h4>
             <ul style="color: white;">
                 <li><b>Tendencia de Emisiones:</b> El promedio regional de CO2 ha variado en un {((df_promedio_regional[ind_co2].iloc[-1] / df_promedio_regional[ind_co2].iloc[0]) - 1) * 100:.1f}% desde el inicio del registro.</li>
-                <li><b>Correlación:</b> Se observa que el aumento de CO2 no detiene el avance de la esperanza de vida, pero introduce riesgos ambientales a largo plazo.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
