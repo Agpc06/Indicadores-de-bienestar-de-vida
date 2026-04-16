@@ -72,9 +72,12 @@ Nos ayudará a entender cada carpeta del repositorio de este proyecto
 
 ```text
 Indicadores-de-bienestar-de-vida/
+├── .devcontainer/
+│   └── devcontainer.json               # Configuración de el entorno
 ├── .streamlit/
 │   └── config.toml                # Configuración de la app de Streamlit
-│
+├── .analysis/
+│   └── estadistica.py               # Cálculos Estadísticos en Python
 ├── inputs/                        # Scripts para obtención y procesamiento de datos
 │   ├── interpolación.py           # Métodos de interpolación de datos
 │   ├── owid_co2.py                # Datos de CO2 (Our World in Data)
@@ -87,7 +90,8 @@ Indicadores-de-bienestar-de-vida/
 │   ├── 03_Planteamiento_Del_Problema.py  # Problema de investigación
 │   ├── 05_Manejo_De_Datos.py      # Procesamiento de datos
 │   ├── 06_Evolución_Histórica.py  # Análisis temporal
-│   ├── 07_Impacto_Poblacional.py  # Impacto en la población
+│   ├── 07_Impacto_Poblacional.py
+│   ├── 08_Impacto_del_CO2_en_la_Esperanza_de_Vida.py  # Impacto en la esperanza de vida
 │   └── Queries.py                 # Consultas SQL
 │
 ├── utils/                         # Funciones auxiliares (helpers)
