@@ -119,8 +119,8 @@ SELECT
     short_name AS nombre_pais,
     region AS region,
     indicator_name AS nombre_indicador,
-    ROUND(promedio_region::numeric, 2) AS "Promedio Regional (10 años)",
-    ROUND(promedio_pais::numeric, 2) AS "Promedio País (10 años)",
+    ROUND(promedio_region::numeric, 2) AS "Promedio Regional",
+    ROUND(promedio_pais::numeric, 2) AS "Promedio País",
     ROUND((promedio_pais - promedio_region)::numeric, 2) AS Diferencia
 FROM PromediosTotales
 ORDER BY Diferencia DESC;  
@@ -256,7 +256,7 @@ ORDER BY pct_gap DESC
 
 if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Datos Recientes": 
     st.subheader("**Indicadores Huérfanos con Notas pero sin Datos Recientes**")
- 
+
     with st.expander("**Ver Pregunta**"):
         st.text("""
         Encuentra todos los indicadores que cumplan simultáneamente las siguientes condiciones:
@@ -279,11 +279,11 @@ if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Dat
 IndicadoresConNotasRecientes AS ( 
     -- Filtramos por año > 2010
     SELECT DISTINCT
-        f.indicator_code,
-        MAX(f.year) AS año_nota_mas_reciente
-    FROM original.footnotes f
-    WHERE f.year > 2010
-    GROUP BY f.indicator_code
+        s.indicator_code,
+        MAX(s.year) AS año_nota_mas_reciente
+    FROM original.series_notes s
+    WHERE s.year > 2010
+    GROUP BY s.indicator_code
 ),
 IndicadoresConNotaPais AS (
     -- Contamos países con notas 
