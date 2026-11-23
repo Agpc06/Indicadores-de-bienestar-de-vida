@@ -4,7 +4,7 @@
 
    En este panorama, Latinoamérica se presenta como una región de cambios. Representando aproximadamente el 8% de la población mundial según CEPAL (Comisión Económica para América Latina y el Caribe), la región enfrenta el reto de gestionar procesos en la urbanización mientras intenta preservar una de las biodiversidades más ricas del planeta. Sin embargo, los indicadores de desarrollo tradicionales suelen ocultar las tensiones que existen entre el crecimiento de las ciudades y el bienestar real.
 
-   Para profundizar en esta realidad, este estudio utiliza los Indicadores del Desarrollo Mundial del Banco Mundial como un lente analítico. Al procesar datos que abarcan desde 1990 hasta 2023, buscamos transformar cifras globales en conocimiento estratégico, permitiendo identificar si el avance de la región es realmente sostenible o si los logros en calidad de vida están generando una deuda ambiental irreversible.
+   Para profundizar en esta realidad, este estudio utiliza los Indicadores del Desarrollo Mundial del Banco Mundial como un lente analítico. Al procesar datos que abarcan desde 1963 hasta 2023, buscamos transformar cifras globales en conocimiento estratégico, permitiendo identificar si el avance de la región es realmente sostenible o si los logros en calidad de vida están generando una deuda ambiental irreversible.
 
 #  🎯 Objetivo General
 
@@ -68,36 +68,65 @@ Se utilizaron distintas herramientas para el manejo y análisis de datos
 •⁠  Python: limpieza y procesamiento de datos.
 
 ### Estructura del Repositorio 📁
-Nos ayudará a entender cada carpeta del repositorio de este proyecto
+Nos ayudará a entender cada archivo y carpeta del repositorio:
 
 ```text
 Indicadores-de-bienestar-de-vida/
+├── .devcontainer/                 # Configuración de entorno de desarrollo en contenedores
+│   └── devcontainer.json
 ├── .streamlit/
-│   └── config.toml                # Configuración de la app de Streamlit
+│   └── config.toml                # Configuración de tema visual de Streamlit
 │
-├── inputs/                        # Scripts para obtención y procesamiento de datos
-│   ├── interpolación.py           # Métodos de interpolación de datos
-│   ├── owid_co2.py                # Datos de CO2 (Our World in Data)
-│   ├── owid_enrolment.py          # Datos de educación
-│   └── wbgapi.py                  # Conexión a API del Banco Mundial
+├── inputs/                        # Scripts para obtención y rescate de datos
+│   ├── interpolación.py           # Métodos de interpolación lineal agrupada
+│   ├── owid_co2.py                # Rescate de CO2 (Our World in Data)
+│   ├── owid_enrolment.py          # Rescate de tasa de escolaridad primaria
+│   └── wbgapi.py                  # Conexión directa a API del Banco Mundial
 │
-├── pages/                         # Páginas de la aplicación
+├── pages/                         # Páginas interactivas de la aplicación Streamlit
 │   ├── 01_Introducción.py         # Introducción del proyecto
-│   ├── 02_Objetivos.py            # Objetivos
-│   ├── 03_Planteamiento_Del_Problema.py  # Problema de investigación
-│   ├── 05_Manejo_De_Datos.py      # Procesamiento de datos
-│   ├── 06_Evolución_Histórica.py  # Análisis temporal
-│   ├── 07_Impacto_Poblacional.py  # Impacto en la población
-│   └── Queries.py                 # Consultas SQL
+│   ├── 02_Objetivos.py            # Objetivos generales y específicos
+│   ├── 03_Planteamiento_Del_Problema.py # Problema de investigación
+│   ├── 04_Marco_Metodológico.py   # Enfoque, universo, muestra e indicadores
+│   ├── 05_Manejo_De_Datos.py      # Flujo de datos y migración a Supabase
+│   ├── 06_Evolución_Histórica.py  # Objetivo 1: Salud vs. Cobertura Forestal
+│   ├── 07_Impacto_Poblacional.py  # Objetivo 2: Población Rural vs. Bosques
+│   ├── 08_Emisiones_y_Esperanza_Vida.py # Objetivo 3: Emisiones CO2 vs. Longevidad
+│   └── Queries.py                 # Consultas SQL analíticas (Queries 1 al 5)
 │
-├── utils/                         # Funciones auxiliares (helpers)
+├── utils/                         # Utilidades y funciones auxiliares
+│   ├── funciones.py               # Conexión Supabase, caché, RPC y extracción
+│   └── upload.py                  # Script para migración de base SQLite a Supabase
 │
-├── app.py                         # Aplicación principal de Streamlit
+├── app.py                         # Aplicación principal y explorador de datos
 ├── requirements.txt               # Dependencias del proyecto
-├── README.md                      # Documentación
+├── .env.example                   # Plantilla de variables de entorno
 ├── .gitignore                     # Archivos ignorados por Git
-├── evaluacion_sql_indicadores.docx # Documento de evaluación
+├── README.md                      # Documentación del proyecto
+└── evaluacion_sql_indicadores.docx # Guía de evaluación SQL avanzado
 ```
+
+### Ejecución Local 🚀
+
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/Indicadores-de-bienestar-de-vida.git
+   cd Indicadores-de-bienestar-de-vida
+   ```
+2. Instalar dependencias:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Configurar variables de entorno:
+   ```bash
+   cp .env.example .env
+   # Editar .env con tus credenciales de Supabase (SUPABASE_URL y SUPABASE_KEY)
+   ```
+4. Ejecutar la aplicación:
+   ```bash
+   streamlit run app.py
+   ```
+
 # Colaboradores del proyecto 🫂
 
 Este proyecto fue desarrollado por los siguientes colaboradores:
@@ -108,10 +137,10 @@ Este proyecto fue desarrollado por los siguientes colaboradores:
 - Angel Reina
 
 # Dashboards Interactivos 📈
-En esta parte de la investigación observamos los datos mediante dashboards interactivos diseñado en Streamlit y Power BI para el análisis de los objetivos del proyecto
+En esta parte de la investigación observamos los datos mediante dashboards interactivos diseñados en Streamlit y Power BI para el análisis de los objetivos del proyecto:
 
 ### Links
-**📊[Dashboard Interactivo - Power BI](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
+* **📊 [Dashboard Interactivo - Power BI](https://app.powerbi.com/view?r=eyJrIjoiOWI2ZDc0OGItMDhkNy00ZmY3LWIxY2YtZWEzNzc0MGUwNjZjIiwidCI6IjRjODE4Zjc5LWFiODQtNDU1Mi05YjdjLTJmZTcxNWIwZDBkNSIsImMiOjR9)**
+* **📊 Dashboard Interactivo - Streamlit:** Ejecutable localmente con `streamlit run app.py` o desplegable en Streamlit Cloud configurando las credenciales en `Secrets`.
 
-**📊[Dashboard Interactivo - Streamlit]
 

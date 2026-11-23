@@ -13,7 +13,7 @@ st.title('📊 Análisis del Impacto Urbano en la Esperanza de Vida y la Sosteni
 st.markdown('---')
 
 st.subheader('Objetivo 1: Caracterizar la evolución histórica de la mortalidad infantil y la esperanza de vida, en contraste con la cobertura forestal de la región')
-st.markdown('Este objetivo se centra en trazar una línea temporal comparativa entre indicadores clave de salud pública, en este caso, la tasa de mortalidad infantil y la esperanza de vida, y el indicador ambiental de cobertura forestal porcentual. El propósito es visualizar cómo las transformacion ambienta, ya sea naturalmente o por intervención humana, a lo largo de las décadas, se han correlacionado con los cambios en la supervivencia de la población latinoamericana.')
+st.markdown('Este objetivo se centra en trazar una línea temporal comparativa entre indicadores clave de salud pública, en este caso, la tasa de mortalidad infantil y la esperanza de vida, y el indicador ambiental de cobertura forestal porcentual. El propósito es visualizar cómo las transformaciones ambientales, ya sea naturalmente o por intervención humana a lo largo de las décadas, se han correlacionado con los cambios en la supervivencia de la población latinoamericana.')
 st.markdown('---')
 # Extraemos datos de Supabase
 tabla = 'total'
@@ -151,10 +151,10 @@ if not data_1.empty:
     en términos de pérdida de biodiversidad o recursos forestales.
     """)
 
-st.markdown('El análisis comparativo entre los indicadores de esperanza de vida, mortalidad infantil y  el área forestal revela una relación inversa significativa en el periodo estudiado.')
+st.markdown(f'El análisis comparativo entre los indicadores de esperanza de vida, mortalidad infantil y el área forestal para **{titulo}** revela la interacción histórica entre progreso en salud y conservación ambiental.')
 
-st.markdown('Por un lado, los datos evidencian un éxito indiscutible en el bienestar humano: la esperanza de vida promedio regional se extendió en 7.5 años y la mortalidad infantil se redujo drásticamente en 25.1 puntos. Esto refleja el impacto positivo de la urbanización, la industrialización y el acceso a servicios médicos de la población.')
+st.markdown(f'En términos de bienestar humano, la esperanza de vida presentó una variación de {delta_esp:+.1f} años y la mortalidad infantil varió en {delta_mort:+.1f} puntos por cada mil nacidos vivos. Esto refleja los avances en urbanización, cobertura sanitaria y acceso a servicios básicos.')
 
-st.markdown('Sin embargo, este progreso social ha conllevado un alto costo ambiental. La cobertura forestal regional sufrió una disminución del 3% durante el mismo lapso. La visualización gráfica sugiere que la expansión de las ciudades y la infraestructura necesaria para sostener el crecimiento poblacional y la mejora en los índices de salud se ha realizado, en parte, a expensas de la pérdida de ecosistemas boscosos.')
+st.markdown(f'Paralelamente, la cobertura forestal presentó una variación de {delta_bosque:+.1f}%. La comparación gráfica ilustra cómo la expansión demográfica y la infraestructura urbana han ejercido una presión continua sobre los ecosistemas boscosos.')
 
-st.markdown('Por lo tanto, podemos concluir que, aunque el modelo de desarrollo urbano en Latinoamérica ha sido altamente efectivo para garantizar la supervivencia y longevidad de sus habitantes, ha mostrado una falta de sostenibilidad ambiental, comprometiendo los recursos naturales a futuro. ')
+st.markdown('Por lo tanto, se concluye que garantizar la longevidad y salud de la población debe acompañarse de políticas activas de conservación forestal para evitar que el bienestar humano comprometa irreversiblemente el patrimonio ecológico regional.')

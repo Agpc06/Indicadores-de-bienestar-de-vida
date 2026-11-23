@@ -253,6 +253,85 @@ ORDER BY pct_gap DESC
                 except Exception as e:
                     st.error(f"Error al ejecutar consulta: {str(e)}")
 
+if query_seleccionado == "Query 3: Evolución Interanual y Detección de Regresiones Significativas": 
+    st.subheader("**Evolución Interanual y Detección de Regresiones Significativas**")
+
+    with st.expander("**Ver Pregunta**"):
+        st.text("""
+        Para los países de América Latina y el Caribe, detecta aquellos que hayan experimentado
+        al menos una caída interanual superior al 20% en algún indicador de salud o educación
+        entre el año 2000 y el 2020. Por cada caso detectado, muestra el nombre del país, el
+        indicador, el año en que se produjo la caída, el valor anterior, el valor posterior y el
+        porcentaje de variación. Excluye los casos donde alguno de los dos valores sea nulo o cero.
+""")
+    with st.expander("**Ver Query**"):
+        query_real = "SELECT * FROM query_3" 
+        # query_3 es una vista en la database de Supabase creada con el mismo query mostrado en "query"
+        query = """
+WITH DatosFiltrados AS (
+    SELECT
+        c.short_name AS nombre_pais,
+        s.indicator_name AS nombre_indicador,
+        i.country_code,
+        i.indicator_code,
+        i.year,
+        i.value::numeric AS valor_actual,
+        LAG(i.value::numeric) OVER (
+            PARTITION BY i.country_code, i.indicator_code 
+            ORDER BY i.year
+        ) AS valor_anterior,
+        LAG(i.year) OVER (
+            PARTITION BY i.country_code, i.indicator_code 
+            ORDER BY i.year
+        ) AS año_anterior
+    FROM original.indicators i
+    JOIN original.country c ON i.country_code = c.country_code
+    JOIN original.series s ON i.indicator_code = s.indicator_code
+    WHERE c.region = 'Latin America & Caribbean'
+      AND (s.topic ILIKE '%Health%' OR s.topic ILIKE '%Education%')
+      AND i.year BETWEEN 2000 AND 2020
+      AND i.value IS NOT NULL
+      AND i.value <> 0
+),
+VariacionInteranual AS (
+    SELECT
+        nombre_pais,
+        nombre_indicador,
+        year AS año_caida,
+        valor_anterior,
+        valor_actual AS valor_posterior,
+        ROUND((((valor_actual - valor_anterior) / valor_anterior) * 100)::numeric, 2) AS pct_variacion
+    FROM DatosFiltrados
+    WHERE valor_anterior IS NOT NULL 
+      AND valor_anterior <> 0
+      AND año_anterior = year - 1 -- Asegura que la variación sea interanual consecutiva
+)
+-- Resultado Final
+SELECT
+    nombre_pais AS "Nombre del País",
+    nombre_indicador AS "Indicador",
+    año_caida AS "Año de la Caída",
+    valor_anterior AS "Valor Anterior",
+    valor_posterior AS "Valor Posterior",
+    pct_variacion AS "Variación (%)"
+FROM VariacionInteranual
+WHERE pct_variacion < -20
+ORDER BY pct_variacion ASC;
+        """  
+
+        st.code(query, language="sql")
+
+        if st.button("Ejecutar Query"):
+            with st.spinner("Ejecutando consulta a Supabase..."):
+                try:
+                    df = ejecutar_query(query_real)
+                    if not df.empty:
+                        st.success("Consulta ejecutada exitosamente.")
+                    else: 
+                        st.warning("No se encontraron datos")
+                except Exception as e:
+                    st.error(f"Error al ejecutar consulta: {str(e)}")
+
 if query_seleccionado == "Query 4: Indicadores Huérfanos con Notas pero sin Datos Recientes": 
     st.subheader("**Indicadores Huérfanos con Notas pero sin Datos Recientes**")
 

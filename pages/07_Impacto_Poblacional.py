@@ -62,7 +62,7 @@ with col1:
     
     fig_evol.add_trace(go.Scatter(
         x=data_plot['year'], y=data_plot['area_forestal'],
-        mode='lines+markers', name='Area Fortestal (%)',
+        mode='lines+markers', name='Area Forestal (%)',
         line=dict(color='#3498db', width=2.5), yaxis='y2'
     ))
 
@@ -121,10 +121,10 @@ if not data_plot.empty:
     else 'El gráfico sugiere que la urbanización podría haber aliviado la presión sobre los bosques, permitiendo una recuperación de la cobertura forestal.'}
     """)
 
-    st.markdown('El análisis comparativo entre el cambio de la población rural y la cobertura forestal revela un patrón claro: la fuga de la población del campo hacia la ciudad no ha detenido la deforestación.')
+    st.markdown(f'El análisis comparativo entre el cambio de la población rural y la cobertura forestal para **{titulo}** revela un patrón relevante sobre la dinámica demográfica y el medio ambiente.')
 
-    st.markdown('Los datos muestran que, mientras la población rural disminuyó en un 10.8%, la cobertura forestal sufrió una pérdida adicional del 3% (como lo vimos en el objetivo anterior). La visualización de dispersión confirma una correlación directa entre el cambio de la población rural y la pérdida de áreas forestales .')
+    st.markdown(f'Los datos muestran que, mientras la población rural presentó una variación de {delta_rural:+.1f}%, la cobertura forestal varió en {delta_bosque_o:+.1f}%. La visualización de dispersión permite evaluar el grado de correlación entre el cambio de la población rural y la superficie de áreas forestales.')
 
-    st.markdown('Esto sugiere que la presión sobre los ecosistemas no desaparece al haber menos personas en ellos, sino que se transforma. A medida que la población se concentró en ciudades, la demanda de tierras para la agroindustria, la infraestructura y la explotación de recursos para abastecer los centros urbanos se intensificó, manteniendo la pérdida de áreas forestales a pesar de la menor densidad poblacional rural.')
+    st.markdown('Esto sugiere que la presión sobre los ecosistemas no necesariamente desaparece al haber menos personas en el campo, sino que se transforma. A medida que la población se concentró en ciudades, la demanda de tierras para la agroindustria, la infraestructura y la explotación de recursos para abastecer los centros urbanos se intensificó, incidiendo en la pérdida de áreas forestales independientemente de la densidad poblacional rural.')
 
-    st.markdown('Por tanto, podemos concluir que la población en zonas rurales no afecta directamente a la deforestación , y que, de querer implementarse estrategias de conservación, no pueden basarse únicamente en el control de la dicha población, sino que deben abordar procesos industriales a gran escala.')
+    st.markdown('Por tanto, podemos concluir que la reducción de población en zonas rurales no frena automáticamente la deforestación y que las estrategias de conservación efectivas deben abordar procesos industriales y de consumo a gran escala.')
